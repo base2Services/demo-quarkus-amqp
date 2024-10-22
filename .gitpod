@@ -1,0 +1,7 @@
+tasks:
+    - name: run back-end
+      command: |
+          sdk install java
+          sdk install quarkus
+          cd reative-messaging
+          ./mvnw compile quarkus:dev
