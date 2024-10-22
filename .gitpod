@@ -6,5 +6,5 @@ tasks:
           cd reactive-messaging
           export GITPOD_WORKSPACE_BASE=`echo ${GITPOD_WORKSPACE_URL} | sed -E 's/^\s*.*:\/\///g'`
           mkdir -p config
-          echo "quarkus.dev-ui.hosts=\"8080-${GITPOD_WORKSPACE_BASE}\"" > config/application.properties
+          echo "quarkus.dev-ui.hosts=8080-${GITPOD_WORKSPACE_BASE}" > config/application.properties
           ./mvnw compile quarkus:dev
