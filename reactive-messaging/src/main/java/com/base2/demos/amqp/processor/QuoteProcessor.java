@@ -3,12 +3,13 @@ package com.base2.demos.amqp.processor;
 import java.util.Random;
 
 import jakarta.enterprise.context.ApplicationScoped;
-
+import jakarta.inject.Inject;
 
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.reactive.messaging.Outgoing;
 
-
+import io.quarkus.redis.datasource.RedisDataSource;
+import io.quarkus.redis.datasource.value.ValueCommands;
 import io.smallrye.reactive.messaging.annotations.Blocking;
 import org.jboss.logging.Logger;
 
@@ -24,6 +25,11 @@ public class QuoteProcessor {
   private static final Logger log = Logger.getLogger(QuoteProcessor.class);
 
     private Random random = new Random();
+    private ValueCommands<String, Quote> quoteCommands;
+
+    public QuoteProcessor(RedisDataSource ds) {
+      this.quoteCommands = ds.value(Quote.class);
+    }
 
     @Incoming("requests")       
     @Outgoing("quotes")         
@@ -31,7 +37,9 @@ public class QuoteProcessor {
     public Quote process(String quoteRequest) throws InterruptedException {
         // simulate some hard-working task
         log.info("got quote request:" + quoteRequest);
-        return new Quote(quoteRequest, random.nextInt(100));
+        var quote = new Quote(quoteRequest, random.nextInt(100));
+        quoteCommands.set(quoteRequest, quote);
+        return quote;
     }
 
     @Incoming("quotes")
