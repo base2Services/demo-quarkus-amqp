@@ -1,10 +1,10 @@
 tasks:
-    - before: |
-        sdk install java < /dev/null
-        sdk install quarkus
     - name: run backend
       command: |
+          sdk install java < /dev/null
+          sdk install quarkus
           cd reactive-messaging
           export GITPOD_WORKSPACE_BASE=`echo ${GITPOD_WORKSPACE_URL} | sed -E 's/^\s*.*:\/\///g'`
-          echo "QUARKUS_DEV_UI_HOSTS=\"8080-${GITPOD_WORKSPACE_BASE}\"" > .env
+          mkdir -p config
+          echo "quarkus.dev-ui.hosts=\"8080-${GITPOD_WORKSPACE_BASE}\"" > config/application.properties
           ./mvnw compile quarkus:dev
